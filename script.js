@@ -1,3 +1,44 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const cotacaoInput = document.getElementById('cotacao');
+  const cotacaoReaisInput = document.getElementById('cotacao-reais');
+  const totalPesosElement = document.getElementById('total-pesos');
+  const totalReaisElement = document.getElementById('total-reais');
+
+  function atualizarTotais() {
+    const cotacao = parseFloat(cotacaoInput.value);
+    const cotacaoReais = parseFloat(cotacaoReaisInput.value);
+    let totalPesos = 0;
+    let totalReais = 0;
+
+    // Atualizar totais para gastos fixos
+    document.querySelectorAll('#tabela-fixos tbody tr').forEach(row => {
+      const valorPesos = parseFloat(row.querySelector('td:nth-child(2)').textContent);
+      const valorReais = valorPesos * cotacao;
+      row.querySelector('td:nth-child(3)').textContent = valorReais.toFixed(2);
+      totalPesos += valorPesos;
+      totalReais += valorReais;
+    });
+
+    // Atualizar totais para gastos variáveis
+    document.querySelectorAll('#tabela-variaveis tbody tr').forEach(row => {
+      const valorPesos = parseFloat(row.querySelector('td:nth-child(2)').textContent);
+      const valorReais = valorPesos * cotacao;
+      row.querySelector('td:nth-child(3)').textContent = valorReais.toFixed(2);
+      totalPesos += valorPesos;
+      totalReais += valorReais;
+    });
+
+    totalPesosElement.textContent = totalPesos.toFixed(2);
+    totalReaisElement.textContent = totalReais.toFixed(2);
+  }
+
+  cotacaoInput.addEventListener('input', atualizarTotais);
+  cotacaoReaisInput.addEventListener('input', atualizarTotais);
+
+  // Chamar a função para inicializar os valores
+  atualizarTotais();
+});
+
 // Seleciona elementos
 const cotacaoInput = document.getElementById('cotacao');
 const tabelaFixos = document.getElementById('tabela-fixos').getElementsByTagName('tbody')[0];
