@@ -12,18 +12,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Atualizar totais para gastos fixos
     document.querySelectorAll('#tabela-fixos tbody tr').forEach(row => {
-      const valorPesos = parseFloat(row.querySelector('td:nth-child(2)').textContent);
+      const valorPesos = parseFloat(row.querySelector('td:nth-child(2) input').value);
       const valorReais = valorPesos / cotacaoReais;
-      row.querySelector('td:nth-child(3)').textContent = valorReais.toFixed(2);
+      row.querySelector('td:nth-child(3) input').value = valorReais.toFixed(2);
       totalPesos += valorPesos;
       totalReais += valorReais;
     });
 
     // Atualizar totais para gastos variáveis
     document.querySelectorAll('#tabela-variaveis tbody tr').forEach(row => {
-      const valorPesos = parseFloat(row.querySelector('td:nth-child(2)').textContent);
+      const valorPesos = parseFloat(row.querySelector('td:nth-child(2) input').value);
       const valorReais = valorPesos / cotacaoReais;
-      row.querySelector('td:nth-child(3)').textContent = valorReais.toFixed(2);
+      row.querySelector('td:nth-child(3) input').value = valorReais.toFixed(2);
       totalPesos += valorPesos;
       totalReais += valorReais;
     });
@@ -102,6 +102,7 @@ function criarLinha(tbody) {
 // Função para calcular os totais
 function calcularTotais() {
   const cotacao = parseFloat(cotacaoInput.value) || 0;
+  const cotacaoReais = parseFloat(document.getElementById('cotacao-reais').value) || 0;
 
   let totalPesos = 0;
   let totalReais = 0;
@@ -112,7 +113,7 @@ function calcularTotais() {
     let pesos = parseFloat(row.cells[1].getElementsByTagName('input')[0].value) || 0;
     let reaisInput = row.cells[2].getElementsByTagName('input')[0];
 
-    let reaisCalculado = pesos * cotacao;
+    let reaisCalculado = pesos / cotacaoReais;
 
     // Atribui ao input (desabilitado) o valor calculado
     reaisInput.value = reaisCalculado.toFixed(2);
@@ -127,7 +128,7 @@ function calcularTotais() {
     let pesos = parseFloat(row.cells[1].getElementsByTagName('input')[0].value) || 0;
     let reaisInput = row.cells[2].getElementsByTagName('input')[0];
 
-    let reaisCalculado = pesos * cotacao;
+    let reaisCalculado = pesos / cotacaoReais;
     reaisInput.value = reaisCalculado.toFixed(2);
 
     totalPesos += pesos;
@@ -145,6 +146,7 @@ addVariavelBtn.addEventListener('click', () => criarLinha(tabelaVariaveis));
 
 // Quando a cotação mudar, recalcula
 cotacaoInput.addEventListener('input', calcularTotais);
+document.getElementById('cotacao-reais').addEventListener('input', calcularTotais);
 
 // (Opcional) Criar algumas linhas iniciais de exemplo
 criarLinha(tabelaFixos);
