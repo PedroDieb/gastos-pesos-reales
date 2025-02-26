@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Atualizar totais para gastos fixos
     document.querySelectorAll('#tabela-fixos tbody tr').forEach(row => {
       const valorPesos = parseFloat(row.querySelector('td:nth-child(2)').textContent);
-      const valorReais = valorPesos * cotacao;
+      const valorReais = valorPesos / cotacaoReais;
       row.querySelector('td:nth-child(3)').textContent = valorReais.toFixed(2);
       totalPesos += valorPesos;
       totalReais += valorReais;
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Atualizar totais para gastos variáveis
     document.querySelectorAll('#tabela-variaveis tbody tr').forEach(row => {
       const valorPesos = parseFloat(row.querySelector('td:nth-child(2)').textContent);
-      const valorReais = valorPesos * cotacao;
+      const valorReais = valorPesos / cotacaoReais;
       row.querySelector('td:nth-child(3)').textContent = valorReais.toFixed(2);
       totalPesos += valorPesos;
       totalReais += valorReais;
