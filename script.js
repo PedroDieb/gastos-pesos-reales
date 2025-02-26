@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const cotacaoInput = document.getElementById('cotacao');
   const cotacaoReaisInput = document.getElementById('cotacao-reais');
   const totalPesosElement = document.getElementById('total-pesos');
   const totalReaisElement = document.getElementById('total-reais');
 
   function atualizarTotais() {
-    const cotacao = parseFloat(cotacaoInput.value);
     const cotacaoReais = parseFloat(cotacaoReaisInput.value);
     let totalPesos = 0;
     let totalReais = 0;
@@ -32,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     totalReaisElement.textContent = totalReais.toFixed(2);
   }
 
-  cotacaoInput.addEventListener('input', atualizarTotais);
   cotacaoReaisInput.addEventListener('input', atualizarTotais);
 
   // Chamar a função para inicializar os valores
@@ -40,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Seleciona elementos
-const cotacaoInput = document.getElementById('cotacao');
 const tabelaFixos = document.getElementById('tabela-fixos').getElementsByTagName('tbody')[0];
 const tabelaVariaveis = document.getElementById('tabela-variaveis').getElementsByTagName('tbody')[0];
 
@@ -101,7 +97,6 @@ function criarLinha(tbody) {
 
 // Função para calcular os totais
 function calcularTotais() {
-  const cotacao = parseFloat(cotacaoInput.value) || 0;
   const cotacaoReais = parseFloat(document.getElementById('cotacao-reais').value) || 0;
 
   let totalPesos = 0;
@@ -145,7 +140,6 @@ addFixoBtn.addEventListener('click', () => criarLinha(tabelaFixos));
 addVariavelBtn.addEventListener('click', () => criarLinha(tabelaVariaveis));
 
 // Quando a cotação mudar, recalcula
-cotacaoInput.addEventListener('input', calcularTotais);
 document.getElementById('cotacao-reais').addEventListener('input', calcularTotais);
 
 // (Opcional) Criar algumas linhas iniciais de exemplo
