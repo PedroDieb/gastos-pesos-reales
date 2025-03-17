@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
+    console.log('Salvando dados no localStorage:', { cotacaoReais, fixos, variaveis });
     localStorage.setItem('cotacaoReais', cotacaoReais);
     localStorage.setItem('fixos', JSON.stringify(fixos));
     localStorage.setItem('variaveis', JSON.stringify(variaveis));
@@ -90,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const cotacaoReais = localStorage.getItem('cotacaoReais');
     const fixos = JSON.parse(localStorage.getItem('fixos')) || [];
     const variaveis = JSON.parse(localStorage.getItem('variaveis')) || [];
+
+    console.log('Carregando dados do localStorage:', { cotacaoReais, fixos, variaveis });
 
     if (cotacaoReais) {
       cotacaoReaisInput.value = cotacaoReais;
