@@ -12,21 +12,33 @@ app.use(cors());
 const dataFilePath = path.join(__dirname, 'data.json');
 
 app.get('/data', (req, res) => {
-  fs.readFile(dataFilePath, 'utf8', (err, data) => {
-    if (err) {
-      return res.status(500).send('Erro ao ler os dados');
-    }
-    res.send(JSON.parse(data));
-  });
+  try {
+    fs.readFile(dataFilePath, 'utf8', (err, data) => {
+      if (err) {
+        console.error('Erro ao ler os dados:', err);
+        return res.status(500).send('Erro ao ler os dados');
+      }
+      res.send(JSON.parse(data));
+    });
+  } catch (error) {
+    console.error('Erro ao processar a requisição GET /data:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
 });
 
 app.post('/data', (req, res) => {
-  fs.writeFile(dataFilePath, JSON.stringify(req.body, null, 2), (err) => {
-    if (err) {
-      return res.status(500).send('Erro ao salvar os dados');
-    }
-    res.send('Dados salvos com sucesso');
-  });
+  try {
+    fs.writeFile(dataFilePath, JSON.stringify(req.body, null, 2), (err) => {
+      if (err) {
+        console.error('Erro ao salvar os dados:', err);
+        return res.status(500).send('Erro ao salvar os dados');
+      }
+      res.send('Dados salvos com sucesso');
+    });
+  } catch (error) {
+    console.error('Erro ao processar a requisição POST /data:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
 });
 
 app.listen(PORT, () => {
