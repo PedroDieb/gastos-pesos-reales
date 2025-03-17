@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const addVariavelBtn = document.getElementById('add-linha-variavel');
   const ALUGUEL_DOLAR = 430;
   let cotacaoDolarBlue = 0;
-  const backendUrl = 'https://gastos-pesos-reales-1pcqh7vnm-pedrodiebs-projects.vercel.app';
+  const backendUrl = 'https://gastos-pesos-reales-8eouocc82-pedrodiebs-projects.vercel.app';
 
   async function fetchCotacaoDolar() {
     try {
@@ -127,58 +127,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function criarLinha(tbody) {
-    const newRow = tbody.insertRow();
-
-    // Descrição
-    let cellDesc = newRow.insertCell(0);
-    cellDesc.setAttribute('data-label', 'Descrição');
-    const descInput = document.createElement('input');
-    descInput.type = 'text';
-    descInput.placeholder = 'Ex: Aluguel';
-    cellDesc.appendChild(descInput);
-
-    // Valor em Pesos
-    let cellPesos = newRow.insertCell(1);
-    cellPesos.setAttribute('data-label', 'Valor (Pesos)');
-    const pesosInput = document.createElement('input');
-    pesosInput.type = 'number';
-    pesosInput.min = '0';
-    pesosInput.step = '0.01';
-    pesosInput.value = '0';
-    pesosInput.addEventListener('input', atualizarTotais);
-    cellPesos.appendChild(pesosInput);
-
-    // Valor em Reais
-    let cellReais = newRow.insertCell(2);
-    cellReais.setAttribute('data-label', 'Valor (Reais)');
-    const reaisInput = document.createElement('input');
-    reaisInput.type = 'number';
-    reaisInput.min = '0';
-    reaisInput.step = '0.01';
-    reaisInput.value = '0';
-    reaisInput.disabled = true; // será calculado automaticamente
-    cellReais.appendChild(reaisInput);
-
-    // Botão de remover
-    let cellRemove = newRow.insertCell(3);
-    cellRemove.setAttribute('data-label', 'Ação');
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = 'Remover';
-    removeBtn.addEventListener('click', () => {
-      tbody.removeChild(newRow);
+  function criarLinha(tabela) {
+    const row = tabela.insertRow();
+    row.innerHTML = `
+      <td><input type="text" /></td>
+      <td><input type="number" step="0.01" /></td>
+      <td><input type="number" step="0.01" readonly /></td>
+      <td><button class="remover-linha">Remover</button></td>
+    `;
+    row.querySelector('.remover-linha').addEventListener('click', () => {
+      tabela.deleteRow(row.rowIndex - 1);
       atualizarTotais();
     });
-    cellRemove.appendChild(removeBtn);
-
-    return newRow;
+    return row;
   }
 
-  cotacaoReaisInput.addEventListener('input', atualizarTotais);
   addFixoBtn.addEventListener('click', () => criarLinha(tabelaFixos));
   addVariavelBtn.addEventListener('click', () => criarLinha(tabelaVariaveis));
 
-  // Chamar a função para inicializar os valores
-  carregarDados();
+  cotacaoReaisInput.addEventListener('input', atualizarTotais);
+
   fetchCotacaoDolar();
+  carregarDados();
 });
