@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const addVariavelBtn = document.getElementById('add-linha-variavel');
   const ALUGUEL_DOLAR = 430;
   let cotacaoDolarBlue = 0;
+  const backendUrl = 'https://gastos-pesos-reales-1pcqh7vnm-pedrodiebs-projects.vercel.app';
 
   async function fetchCotacaoDolar() {
     try {
@@ -58,11 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
     totalPesosElement.textContent = totalPesos.toFixed(2);
     totalReaisElement.textContent = totalReais.toFixed(2);
 
-    // Salvar dados no localStorage
+    // Salvar dados no backend
     salvarDados();
   }
 
-  function salvarDados() {
+  async function salvarDados() {
     const cotacaoReais = cotacaoReaisInput.value;
     const fixos = [];
     const variaveis = [];
@@ -81,36 +82,49 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    console.log('Salvando dados no localStorage:', { cotacaoReais, fixos, variaveis });
-    localStorage.setItem('cotacaoReais', cotacaoReais);
-    localStorage.setItem('fixos', JSON.stringify(fixos));
-    localStorage.setItem('variaveis', JSON.stringify(variaveis));
+    const data = { cotacaoReais, fixos, variaveis };
+
+    try {
+      const response = await fetch(`${backendUrl}/data`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const result = await response.text();
+      console.log(result);
+    } catch (error) {
+      console.error('Erro ao salvar dados:', error);
+    }
   }
 
-  function carregarDados() {
-    const cotacaoReais = localStorage.getItem('cotacaoReais');
-    const fixos = JSON.parse(localStorage.getItem('fixos')) || [];
-    const variaveis = JSON.parse(localStorage.getItem('variaveis')) || [];
+  async function carregarDados() {
+    try {
+      const response = await fetch(`${backendUrl}/data`);
+      const data = await response.json();
+      console.log('Carregando dados do backend:', data);
 
-    console.log('Carregando dados do localStorage:', { cotacaoReais, fixos, variaveis });
+      if (data.cotacaoReais) {
+        cotacaoReaisInput.value = data.cotacaoReais;
+      }
 
-    if (cotacaoReais) {
-      cotacaoReaisInput.value = cotacaoReais;
+      data.fixos.forEach(item => {
+        const row = criarLinha(tabelaFixos);
+        row.querySelector('td:nth-child(1) input').value = item.descricao;
+        row.querySelector('td:nth-child(2) input').value = item.valorPesos;
+      });
+
+      data.variaveis.forEach(item => {
+        const row = criarLinha(tabelaVariaveis);
+        row.querySelector('td:nth-child(1) input').value = item.descricao;
+        row.querySelector('td:nth-child(2) input').value = item.valorPesos;
+      });
+
+      atualizarTotais();
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
     }
-
-    fixos.forEach(item => {
-      const row = criarLinha(tabelaFixos);
-      row.querySelector('td:nth-child(1) input').value = item.descricao;
-      row.querySelector('td:nth-child(2) input').value = item.valorPesos;
-    });
-
-    variaveis.forEach(item => {
-      const row = criarLinha(tabelaVariaveis);
-      row.querySelector('td:nth-child(1) input').value = item.descricao;
-      row.querySelector('td:nth-child(2) input').value = item.valorPesos;
-    });
-
-    atualizarTotais();
   }
 
   function criarLinha(tbody) {

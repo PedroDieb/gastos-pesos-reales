@@ -1,0 +1,10 @@
+{
+  "cotacaoReais": "210",
+  "fixos": [
+    {
+      "descricao": "Aluguel",
+      "valorPesos": "533200.00"
+    }
+  ],
+  "variaveis": []
+}
