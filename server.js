@@ -11,6 +11,11 @@ app.use(cors());
 
 const dataFilePath = path.join(__dirname, 'data.json');
 
+// Rota para a raiz
+app.get('/', (req, res) => {
+  res.send('Servidor rodando');
+});
+
 app.get('/data', (req, res) => {
   try {
     fs.readFile(dataFilePath, 'utf8', (err, data) => {
